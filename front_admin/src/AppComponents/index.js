@@ -151,7 +151,6 @@ const AppComponents = () => {
             textAlign: 'center',
             margin: 10,
             padding: 10,
-            marginBottom:150,
           }}
         >
           <Typography.Title level={5}>Projet Pfa EMSI ©2024 Created by </Typography.Title>
