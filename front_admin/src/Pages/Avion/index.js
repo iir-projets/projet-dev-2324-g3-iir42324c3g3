@@ -83,38 +83,26 @@ const Avion= () => {
 
   const columns = [
     {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
+      title: 'Numero d avion',
+      dataIndex: 'num',
+      key: 'num',
       sorter: (a, b) => a.id - b.id,
-      ...getColumnSearchProps('id', 'ID'),
+      ...getColumnSearchProps('num', 'num'),
     },
     {
-      title: 'Titre',
-      dataIndex: 'Titre',
-      key: 'Titre',
+      title: 'Nom d Avion',
+      dataIndex: 'nom',
+      key: 'nom',
       render: (text) => <a>{text}</a>,
-      ...getColumnSearchProps('Titre', 'Titre'),
+      ...getColumnSearchProps('nom', 'nom'),
     },
     {
-      title: 'Ville',
-      dataIndex: 'Ville',
-      key: 'Ville',
-      ...getColumnSearchProps('Ville', 'Ville'),
+      title: 'Capacite',
+      dataIndex: 'capacite',
+      key: 'capacite',
+      ...getColumnSearchProps('capacite', 'capacite'),
     },
-    {
-      title: 'Horaire',
-      dataIndex: 'Horaire',
-      key: 'Horaire',
-      ...getColumnSearchProps('Horaire', 'Horaire'),
-    },
-    {
-      title: 'Frais',
-      dataIndex: 'Frais',
-      key: 'Frais',
-      ...getColumnSearchProps('Frais', 'Frais'),
-    },
-    
+   
     {
       title: 'Action',
       key: 'action',
