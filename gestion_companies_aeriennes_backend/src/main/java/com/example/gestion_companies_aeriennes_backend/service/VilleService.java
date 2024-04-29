@@ -22,6 +22,7 @@ public class VilleService {
 	@Autowired
 	public final PaysRepository paysRepository;
 	
+	
 	 public VilleService(VilleRepository villeRepository,PaysRepository paysRepository) {
 	        this.villeRepository = villeRepository;
 	        this.paysRepository=paysRepository;
@@ -64,7 +65,7 @@ public class VilleService {
 			return Ville.builder()
 					.num(villeDTO.getNum())
 					.libelle(villeDTO.getLibelle())
-					.pays(paysRepository.findById(villeDTO.getMatricule_pays()).get())
+					.pays(villeDTO.getMatricule_pays()!= null ? paysRepository.findById(villeDTO.getMatricule_pays()).get(): null)
 					.build();
 
 		}
