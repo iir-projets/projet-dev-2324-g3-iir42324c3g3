@@ -22,7 +22,7 @@ public class VilleDTO {
 	return VilleDTO.builder()
 			.num(ville.getNum())
 			.libelle(ville.getLibelle())
-			.matricule_pays((ville.getPays()).getMatricule())
+			.matricule_pays(ville.getPays() != null ? ville.getPays().getMatricule() : null)
 			.build();
 	}
 }
