@@ -83,18 +83,18 @@ const Aeroport= () => {
 
   const columns = [
     {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
+      title: 'Numero',
+      dataIndex: 'num',
+      key: 'num',
       sorter: (a, b) => a.id - b.id,
-      ...getColumnSearchProps('id', 'ID'),
+      ...getColumnSearchProps('num', 'num'),
     },
     {
-      title: 'Titre',
-      dataIndex: 'Titre',
-      key: 'Titre',
+      title: 'Nom Aeroport',
+      dataIndex: 'nom',
+      key: 'nom',
       render: (text) => <a>{text}</a>,
-      ...getColumnSearchProps('Titre', 'Titre'),
+      ...getColumnSearchProps('nom', 'nom'),
     },
     {
       title: 'Ville',
@@ -103,17 +103,12 @@ const Aeroport= () => {
       ...getColumnSearchProps('Ville', 'Ville'),
     },
     {
-      title: 'Horaire',
-      dataIndex: 'Horaire',
-      key: 'Horaire',
-      ...getColumnSearchProps('Horaire', 'Horaire'),
+      title: 'Pays',
+      dataIndex: 'pays',
+      key: 'pays',
+      ...getColumnSearchProps('pays', 'pays'),
     },
-    {
-      title: 'Frais',
-      dataIndex: 'Frais',
-      key: 'Frais',
-      ...getColumnSearchProps('Frais', 'Frais'),
-    },
+   
     
     {
       title: 'Action',
