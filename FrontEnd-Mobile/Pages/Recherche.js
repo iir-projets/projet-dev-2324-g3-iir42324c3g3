@@ -1,28 +1,27 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, TouchableOpacity, Alert } from 'react-native';
 import { Input, Button, Text, CheckBox, Icon } from 'react-native-elements';
 import { Calendar } from 'react-native-calendars';
-import styles from './styles';
+import styles from './styles'; // Import des styles à partir du fichier séparé
+
 const Recherche = () => {
+  const [tripType, setTripType] = useState('');
   const [departureDate, setDepartureDate] = useState('');
   const [arrivalDate, setArrivalDate] = useState('');
   const [showDepartureCalendar, setShowDepartureCalendar] = useState(false);
   const [showArrivalCalendar, setShowArrivalCalendar] = useState(false);
-  const [comfortLabel, setComfortLabel] = useState('');
+  const [comfortLevel, setComfortLevel] = useState('');
   const [departureCity, setDepartureCity] = useState('');
   const [arrivalCity, setArrivalCity] = useState('');
 
-  const handleDepartureDateFocus = () => {
-    setShowDepartureCalendar(true);
-    setShowArrivalCalendar(false);
-  };
+  const handleSearch = () => {
+    // Vérification du type de trajet sélectionné
+    if (tripType === '') {
+      Alert.alert('Erreur', 'Veuillez sélectionner le type de trajet (Aller ou Aller-Retour).');
+      return;
+    }
 
-  const handleArrivalDateFocus = () => {
-    setShowDepartureCalendar(false);
-    setShowArrivalCalendar(true);
-  };
-
-  const handleLogin = () => {
+    // Vérification des autres champs requis
     if (!departureCity) {
       Alert.alert('Erreur', 'Veuillez entrer une ville de départ.');
       return;
@@ -38,45 +37,80 @@ const Recherche = () => {
       return;
     }
 
-    if (!arrivalDate) {
+    if (tripType === 'roundTrip' && !arrivalDate) {
       Alert.alert('Erreur', 'Veuillez sélectionner une date d\'arrivée.');
       return;
     }
 
-    if (!comfortLabel) {
+    if (!comfortLevel) {
       Alert.alert('Erreur', 'Veuillez sélectionner un niveau de confort.');
       return;
     }
 
-    console.log('Ville de départ sélectionnée:', departureCity);
-    console.log('Ville d\'arrivée sélectionnée:', arrivalCity);
-    console.log('Date de départ sélectionnée:', departureDate);
-    console.log('Date d\'arrivée sélectionnée:', arrivalDate);
-    console.log('Confort:', comfortLabel);
+    // Effectuer la recherche
+    console.log('Recherche effectuée avec les paramètres suivants :');
+    console.log('Ville de départ :', departureCity);
+    console.log('Ville d\'arrivée :', arrivalCity);
+    console.log('Date de départ :', departureDate);
+    console.log('Date d\'arrivée :', arrivalDate);
+    console.log('Type de voyage :', tripType);
+    console.log('Niveau de confort :', comfortLevel);
 
-    // Effacer tous les champs
+    // Réinitialiser les champs après la recherche
     setDepartureCity('');
     setArrivalCity('');
     setDepartureDate('');
     setArrivalDate('');
-    setComfortLabel('');
+    setComfortLevel('');
+  };
+
+  const handleDepartureDateFocus = () => {
+    setShowDepartureCalendar(true);
+  };
+
+  const handleArrivalDateFocus = () => {
+    setShowArrivalCalendar(true);
+  };
+
+  const handleTripTypeChange = (type) => {
+    setTripType(type);
+  };
+
+  const handleComfortLevelChange = (level) => {
+    setComfortLevel(level);
   };
 
   return (
     <View style={styles.container}>
+      <View style={styles.tripTypeContainer}>
+        <Button
+          title="Aller"
+          buttonStyle={[
+            styles.tripTypeButton,
+            tripType === 'oneWay' ? styles.selectedButtonStyle : null,
+          ]}
+          titleStyle={styles.tripTypeButtonText}
+          onPress={() => handleTripTypeChange('oneWay')}
+        />
+        <Button
+          title="Aller-Retour"
+          buttonStyle={[
+            styles.tripTypeButton,
+            tripType === 'roundTrip' ? styles.selectedButtonStyle : null,
+          ]}
+          titleStyle={styles.tripTypeButtonText}
+          onPress={() => handleTripTypeChange('roundTrip')}
+        />
+      </View>
       <Input
         style={[styles.input, styles.departureInput]}
         placeholder="Ville de départ"
-        placeholderTextColor="#fff"
-        inputStyle={{ fontSize: 18, color: '#fff' }}
         onChangeText={setDepartureCity}
         value={departureCity}
       />
       <Input
         style={[styles.input, styles.arrivalInput]}
         placeholder="Ville d'arrivée"
-        placeholderTextColor="#fff"
-        inputStyle={{ fontSize: 18, color: '#fff' }}
         onChangeText={setArrivalCity}
         value={arrivalCity}
       />
@@ -85,27 +119,22 @@ const Recherche = () => {
           <Input
             placeholder="Date de départ"
             value={departureDate}
-            leftIcon={<Icon name="calendar" type="font-awesome" color="#fff" />}
+            leftIcon={
+              <Icon
+                name="calendar"
+                type="font-awesome"
+                style={styles.calendarIcon}
+              />
+            }
             editable={false}
-            inputStyle={{ fontSize: 16, color: '#fff' }}
+            inputStyle={styles.inputStyle}
           />
         </View>
       </TouchableOpacity>
       {showDepartureCalendar && (
         <Calendar
           style={styles.calendar}
-          theme={{
-            backgroundColor: '#3764B9',
-            calendarBackground: '#3764B9',
-            textSectionTitleColor: '#fff',
-            dayTextColor: '#fff',
-            todayTextColor: '#3764B9',
-            selectedDayBackgroundColor: '#FF6B6B',
-            selectedDayTextColor: '#fff',
-            arrowColor: '#fff',
-            monthTextColor: '#fff',
-            textDisabledColor: '#BDBDBD',
-          }}
+          theme={styles.calendarTheme}
           onDayPress={(day) => {
             setDepartureDate(day.dateString);
             setShowDepartureCalendar(false);
@@ -117,27 +146,22 @@ const Recherche = () => {
           <Input
             placeholder="Date d'arrivée"
             value={arrivalDate}
-            leftIcon={<Icon name="calendar" type="font-awesome" color="#fff" />}
+            leftIcon={
+              <Icon
+                name="calendar"
+                type="font-awesome"
+                color={styles.calendarIcon.color}
+              />
+            }
             editable={false}
-            inputStyle={{ fontSize: 16, color: '#fff' }}
+            inputStyle={styles.inputStyle}
           />
         </View>
       </TouchableOpacity>
       {showArrivalCalendar && (
         <Calendar
           style={styles.calendar}
-          theme={{
-            backgroundColor: '#3764B9',
-            calendarBackground: '#3764B9',
-            textSectionTitleColor: '#fff',
-            dayTextColor: '#fff',
-            todayTextColor: '#3764B9',
-            selectedDayBackgroundColor: '#FF6B6B',
-            selectedDayTextColor: '#fff',
-            arrowColor: '#fff',
-            monthTextColor: '#fff',
-            textDisabledColor: '#BDBDBD',
-          }}
+          theme={styles.calendarTheme}
           onDayPress={(day) => {
             setArrivalDate(day.dateString);
             setShowArrivalCalendar(false);
@@ -147,30 +171,28 @@ const Recherche = () => {
       <Text style={styles.comfortLabel}>Confort :</Text>
       <View style={styles.comfortContainer}>
         <CheckBox
-          title='1ere classe'
-          checked={comfortLabel === '1ere classe'}
-          onPress={() => setComfortLabel('1ere classe')}
+          title="1ere classe"
+          checked={comfortLevel === '1ere classe'}
+          onPress={() => handleComfortLevelChange('1ere classe')}
           textStyle={styles.comfortText}
           containerStyle={styles.comfortCheckbox}
         />
         <CheckBox
-          title='2eme classe'
-          checked={comfortLabel === '2eme classe'}
-          onPress={() => setComfortLabel('2eme classe')}
+          title="2eme classe"
+          checked={comfortLevel === '2eme classe'}
+          onPress={() => handleComfortLevelChange('2eme classe')}
           textStyle={styles.comfortText}
           containerStyle={styles.comfortCheckbox}
         />
       </View>
       <Button
         buttonStyle={styles.button}
-        titleStyle={styles.buttonText}
+        titleStyle={styles.searchButtonText}
         title="Rechercher"
-        onPress={handleLogin}
+        onPress={handleSearch}
       />
     </View>
   );
 };
-
-
 
 export default Recherche;
