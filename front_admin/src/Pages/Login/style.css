@@ -1,0 +1,25 @@
+.login-container {
+    background-color: #91C8E4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .login-form {
+    max-width: 600px;
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: white; /* Fond blanc pour le formulaire */
+    color: black; /* Texte en noir */
+    font-weight: bold;
+  }
+  
+  .h2 {
+    color: black; /* Titre en noir */
+  }
+  
+  .login-title {
+    color: black; /* Titre en noir */
+  }
