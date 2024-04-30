@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from 'antd';
 const { Title } = Typography;
-const CoorAeroport = () => (
+const ModifierAvion = () => (
   <>
     <Title>h1. Ant Design</Title>
     <Title level={2}>h2. Ant Design</Title>
@@ -10,4 +10,4 @@ const CoorAeroport = () => (
     <Title level={5}>h5. Ant Design</Title>
   </>
 );
-export default CoorAeroport;
+export default ModifierAvion;
