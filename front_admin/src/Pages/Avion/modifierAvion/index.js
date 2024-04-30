@@ -1,13 +1,73 @@
 import React from 'react';
-import { Typography } from 'antd';
-const { Title } = Typography;
-const ModifierAvion = () => (
-  <>
-    <Title>h1. Ant Design</Title>
-    <Title level={2}>h2. Ant Design</Title>
-    <Title level={3}>h3. Ant Design</Title>
-    <Title level={4}>h4. Ant Design</Title>
-    <Title level={5}>h5. Ant Design</Title>
-  </>
-);
+import { Button, Form, Input, Space } from 'antd';
+
+const ModifierAvion = () => {
+  const [form] = Form.useForm();
+
+  const SubmitButton = ({ children }) => {
+    const [submittable, setSubmittable] = React.useState(false);
+
+    // Watch all values
+    const values = Form.useWatch([], form);
+    React.useEffect(() => {
+      form
+        .validateFields({
+          validateOnly: true,
+        })
+        .then(() => setSubmittable(true))
+        .catch(() => setSubmittable(false));
+    }, [form, values]);
+
+    return (
+      <Button type="primary" htmlType="submit" disabled={!submittable}>
+        {children}
+      </Button>
+    );
+  };
+
+  return (
+    <Form form={form} name="validateOnly" layout="vertical" autoComplete="off">
+      <Form.Item
+        name="numeroAvion"
+        label="Numéro d'Avion"
+        rules={[
+          {
+            required: true,
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        name="nomAvion"
+        label="Nom d'Avion"
+        rules={[
+          {
+            required: true,
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        name="capacite"
+        label="Capacité"
+        rules={[
+          {
+            required: true,
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item>
+        <Space>
+          <SubmitButton>Modifier</SubmitButton>
+          <Button htmlType="reset">Reset</Button>
+        </Space>
+      </Form.Item>
+    </Form>
+  );
+};
+
 export default ModifierAvion;
