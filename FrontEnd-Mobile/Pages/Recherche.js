@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, Alert } from 'react-native';
-import { Input, Button, Text, CheckBox, Icon } from 'react-native-elements';
-import { Calendar } from 'react-native-calendars';
-import styles from './styles'; // Import des styles à partir du fichier séparé
+import { View, TouchableOpacity, Alert, Image } from 'react-native';
+import { Input, Text, CheckBox, Icon } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 
-const Recherche = () => {
+import { Calendar } from 'react-native-calendars';
+import styles from './styles';
+
+const Rechercher = ({ navigation }) => {
   const [tripType, setTripType] = useState('');
   const [departureDate, setDepartureDate] = useState('');
   const [arrivalDate, setArrivalDate] = useState('');
@@ -15,13 +17,11 @@ const Recherche = () => {
   const [arrivalCity, setArrivalCity] = useState('');
 
   const handleSearch = () => {
-    // Vérification du type de trajet sélectionné
     if (tripType === '') {
       Alert.alert('Erreur', 'Veuillez sélectionner le type de trajet (Aller ou Aller-Retour).');
       return;
     }
 
-    // Vérification des autres champs requis
     if (!departureCity) {
       Alert.alert('Erreur', 'Veuillez entrer une ville de départ.');
       return;
@@ -47,7 +47,6 @@ const Recherche = () => {
       return;
     }
 
-    // Effectuer la recherche
     console.log('Recherche effectuée avec les paramètres suivants :');
     console.log('Ville de départ :', departureCity);
     console.log('Ville d\'arrivée :', arrivalCity);
@@ -56,12 +55,14 @@ const Recherche = () => {
     console.log('Type de voyage :', tripType);
     console.log('Niveau de confort :', comfortLevel);
 
-    // Réinitialiser les champs après la recherche
-    setDepartureCity('');
-    setArrivalCity('');
-    setDepartureDate('');
-    setArrivalDate('');
-    setComfortLevel('');
+    navigation.navigate('Vol', {
+      departureCity,
+      arrivalCity,
+      departureDate,
+      arrivalDate,
+      tripType,
+      comfortLevel,
+    });
   };
 
   const handleDepartureDateFocus = () => {
@@ -82,25 +83,32 @@ const Recherche = () => {
 
   return (
     <View style={styles.container}>
+      
       <View style={styles.tripTypeContainer}>
-        <Button
-          title="Aller"
-          buttonStyle={[
+        <TouchableOpacity
+          onPress={() => handleTripTypeChange('oneWay')}
+          style={[
             styles.tripTypeButton,
             tripType === 'oneWay' ? styles.selectedButtonStyle : null,
           ]}
-          titleStyle={styles.tripTypeButtonText}
-          onPress={() => handleTripTypeChange('oneWay')}
-        />
-        <Button
-          title="Aller-Retour"
-          buttonStyle={[
+        >
+          <Text style={[
+            styles.tripTypeButtonText,
+            tripType === 'oneWay' ? styles.selectedButtonText : null,
+          ]}>Aller</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => handleTripTypeChange('roundTrip')}
+          style={[
             styles.tripTypeButton,
             tripType === 'roundTrip' ? styles.selectedButtonStyle : null,
           ]}
-          titleStyle={styles.tripTypeButtonText}
-          onPress={() => handleTripTypeChange('roundTrip')}
-        />
+        >
+          <Text style={[
+            styles.tripTypeButtonText,
+            tripType === 'roundTrip' ? styles.selectedButtonText : null,
+          ]}>Aller-Retour</Text>
+        </TouchableOpacity>
       </View>
       <Input
         style={[styles.input, styles.departureInput]}
@@ -176,6 +184,7 @@ const Recherche = () => {
           onPress={() => handleComfortLevelChange('1ere classe')}
           textStyle={styles.comfortText}
           containerStyle={styles.comfortCheckbox}
+          uncheckedColor='black'
         />
         <CheckBox
           title="2eme classe"
@@ -183,16 +192,22 @@ const Recherche = () => {
           onPress={() => handleComfortLevelChange('2eme classe')}
           textStyle={styles.comfortText}
           containerStyle={styles.comfortCheckbox}
+          uncheckedColor='black'
         />
       </View>
-      <Button
-        buttonStyle={styles.button}
-        titleStyle={styles.searchButtonText}
-        title="Rechercher"
-        onPress={handleSearch}
-      />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Button 
+  title="Rechercher" 
+  onPress={handleSearch} 
+  buttonStyle={{ backgroundColor: 'blue', borderRadius: 5, height: 50, width: 200 }} 
+/>
+
+</View>
+
+
+
     </View>
   );
 };
 
-export default Recherche;
+export default Rechercher;

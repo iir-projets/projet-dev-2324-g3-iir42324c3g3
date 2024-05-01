@@ -1,16 +1,17 @@
 import { StyleSheet } from 'react-native';
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff', // Couleur de fond blanche
     paddingHorizontal: 16,
     paddingVertical: 24,
+    backgroundColor: '#fff',
+    resizeMode: 'cover',
   },
   input: {
-    backgroundColor: '#fff', // Couleur de fond blanche pour les champs de saisie
     borderRadius: 8,
-    color: '#000', // Couleur du texte en noir
+    color: '#000',
   },
   departureInput: {
     marginBottom: 16,
@@ -22,10 +23,10 @@ const styles = StyleSheet.create({
     borderWidth: 0,
   },
   inputStyle: {
-    color: '#000', // Couleur du texte en noir
+    color: '#000',
   },
   calendar: {
-    backgroundColor: '#fff', // Couleur de fond blanche pour le calendrier
+    backgroundColor: '#fff',
     borderRadius: 8,
   },
   calendarTheme: {
@@ -35,15 +36,15 @@ const styles = StyleSheet.create({
     selectedDayBackgroundColor: '#00adf5',
     selectedDayTextColor: '#ffffff',
     todayTextColor: '#00adf5',
-    dayTextColor: '#000', // Couleur du texte en noir
+    dayTextColor: '#000',
     textDisabledColor: '#d9e1e8',
     dotColor: '#00adf5',
     selectedDotColor: '#ffffff',
-    arrowColor: '#000', // Couleur des flèches en noir
-    monthTextColor: '#000', // Couleur du texte du mois en noir
+    arrowColor: '#000',
+    monthTextColor: '#000',
   },
   comfortLabel: {
-    color: '#000', // Couleur du texte en noir
+    color: '#000',
     fontSize: 16,
     marginBottom: 8,
   },
@@ -53,47 +54,45 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   comfortCheckbox: {
-    backgroundColor: '#fff', // Couleur de fond blanche pour les cases à cocher
+    backgroundColor: '#fff',
     borderWidth: 0,
   },
   comfortText: {
-    color: '#000', // Couleur du texte en noir
-  },
-  button: {
-    backgroundColor: '#3498db', // Couleur bleue pour le bouton de recherche
-    borderRadius: 10,
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    alignSelf: 'center',
-    marginBottom: 20,
-  },
-  searchButtonText: {
-    fontSize: 18,
-    textTransform: 'uppercase',
-    color: '#fff',
+    color: '#000',
   },
   tripTypeButton: {
-    backgroundColor: 'white', // Couleur orange pour les boutons "Aller" et "Aller-Retour"
+    paddingHorizontal: 30,
+    paddingVertical: 16,
   },
   tripTypeButtonText: {
     fontSize: 20,
     textTransform: 'uppercase',
-    color: '#000', // Couleur du texte en noir
+    color: '#000',
     textAlign: 'center',
   },
   selectedButtonStyle: {
-    backgroundColor: 'red', // Nouvelle couleur de fond pour le bouton sélectionné
+    backgroundColor: '#c0392b',
   },
   calendarIcon: {
-    tintColor: '#000', // Couleur noire pour l'icône de calendrier
+    tintColor: '#000',
   },
   tripTypeContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 20,
   },
-  selectedButtonStyle: {
-    backgroundColor: '#c0392b', // Nouvelle couleur rouge pour le bouton sélectionné
+  selectedButtonText: {
+    color: 'black',
+  },
+  button: {
+    backgroundColor: '#007bff',
+    borderRadius: 5,
+    padding: 10,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
 
