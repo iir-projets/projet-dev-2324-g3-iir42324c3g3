@@ -40,7 +40,7 @@ function AppRoutes(){
 
           <Route path="/avion" element={<Avion/>} />
           <Route path="/avion/ajouterAvion" element={<AjouterAvion/>} />
-          <Route path="/avion/modifierAvion" element={<ModifierAvion/>} />
+          <Route path="/avion/modifierAvion/:id" element={<ModifierAvion/>} />
 
 
 
@@ -49,7 +49,7 @@ function AppRoutes(){
 
           <Route path="/passager" element={<Passager />} />
           <Route path="/passager/ajouterPassager" element={<AjouterPassager />} />
-          <Route path="/passager/modifierPassager" element={<ModifierPassager />} />
+          <Route path="/passager/modifierPassager/:id" element={<ModifierPassager />} />
 
           <Route path="/reservation" element={<Reservation />} />
           <Route path="/reservation/ajouterReservation" element={<AjouterReservation />} />

@@ -1,8 +1,11 @@
 import React from 'react';
-import { Button, Form, Input, Space } from 'antd';
+import { Button, Form, Input, Space, message } from 'antd';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const AjouterAvion = () => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
 
   const SubmitButton = ({ children }) => {
     const [submittable, setSubmittable] = React.useState(false);
@@ -25,21 +28,23 @@ const AjouterAvion = () => {
     );
   };
 
+  const onFinish = async (values) => {
+    try {
+      await axios.post('http://localhost:8080/api/avion', values);
+      message.success('Avion ajouté avec succès!');
+      navigate('/avion');
+    } catch (error) {
+      console.error('Error adding avion:', error);
+      message.error('Erreur lors de l\'ajout de l\'avion. Veuillez réessayer.');
+    }
+  };
+
   return (
-    <Form form={form} name="validateOnly" layout="vertical" autoComplete="off">
+    <Form form={form} name="validateOnly" layout="vertical" autoComplete="off" onFinish={onFinish}>
+      
+      
       <Form.Item
-        name="numeroAvion"
-        label="Numéro d'Avion"
-        rules={[
-          {
-            required: true,
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name="nomAvion"
+        name="nom"
         label="Nom d'Avion"
         rules={[
           {
@@ -60,15 +65,14 @@ const AjouterAvion = () => {
       >
         <Input />
       </Form.Item>
-      <Form.Item >
-      <Space>
-        
-            <Button type="primary" htmlType="submit" className="submit-button">
+      <Form.Item>
+        <Space>
+        <Button type="primary" htmlType="submit" className="submit-button">
               Ajouter
             </Button>
-            <Button htmlType="reset">Reset</Button>
+          <Button htmlType="reset">Reset</Button>
         </Space>
-          </Form.Item>
+      </Form.Item>
     </Form>
   );
 };

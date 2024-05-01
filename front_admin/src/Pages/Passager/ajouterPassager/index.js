@@ -1,11 +1,13 @@
 import React from 'react';
-import { Button, Form, Input, Space } from 'antd';
-
+import { Button, Form, Input, Space,message } from 'antd';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
 
 const AjouterPassager = () => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
 
   const SubmitButton = ({ children }) => {
     const [submittable, setSubmittable] = React.useState(false);
@@ -28,8 +30,18 @@ const AjouterPassager = () => {
     );
   };
 
+  const onFinish = async (values) => {
+    try {
+      await axios.post('http://localhost:8080/api/Passager', values);
+      message.success('Passager ajouté avec succès!');
+      navigate('/Passager'); // Navigate to the list of passengers
+    } catch (error) {
+      console.error('Error adding passager:', error);
+      message.error('Erreur lors de l\'ajout du passager. Veuillez réessayer.');
+    }
+  };
   return (
-    <Form form={form} name="validateOnly" layout="vertical" autoComplete="off">
+    <Form form={form} name="validateOnly" layout="vertical" autoComplete="off" onFinish={onFinish}>
       <Form.Item
         name="cin"
         label="CIN"
@@ -42,7 +54,7 @@ const AjouterPassager = () => {
         <Input />
       </Form.Item>
       <Form.Item
-        name="nomPassager"
+        name="nom"
         label="Nom du Passager"
         rules={[
           {
@@ -53,7 +65,7 @@ const AjouterPassager = () => {
         <Input />
       </Form.Item>
       <Form.Item
-        name="prenomPassager"
+        name="prenom"
         label="Prénom du Passager"
         rules={[
           {
@@ -64,7 +76,7 @@ const AjouterPassager = () => {
         <Input />
       </Form.Item>
       <Form.Item
-        name="emailPassager"
+        name="email"
         label="Email du Passager"
         rules={[
           {
@@ -76,7 +88,7 @@ const AjouterPassager = () => {
         <Input />
       </Form.Item>
       <Form.Item
-        name="adressePassager"
+        name="adresse"
         label="Adresse du Passager"
         rules={[
           {
@@ -87,7 +99,7 @@ const AjouterPassager = () => {
         <Input />
       </Form.Item>
       <Form.Item
-        name="telephonePassager"
+        name="telephone"
         label="Téléphone du Passager"
         rules={[
           {

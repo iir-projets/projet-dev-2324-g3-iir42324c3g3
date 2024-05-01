@@ -2,23 +2,31 @@ import React, { useState, useEffect } from 'react';
 import './style.css';
 import { Table, Pagination, Space, Button, Input, message } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { useNavigate  } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
-
 
 const showTotal = (total) => `Total ${total} items`;
 
-const Avion= () => {
+const Avion = () => {
   const [current, setCurrent] = useState(1);
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
- 
-  const navigate = useNavigate(); 
 
-  
- 
-  
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchAvionData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/avion');
+        setData(response.data);
+      } catch (error) {
+        console.error('Error fetching avion data:', error);
+        message.error('Erreur lors de la récupération des données des avions. Veuillez réessayer.');
+      }
+    };
+
+    fetchAvionData();
+  }, []);
 
   const onChange = (page) => {
     setCurrent(page);
@@ -30,8 +38,9 @@ const Avion= () => {
 
   const filteredData = data.filter((item) => {
     return (
-      item.id.toString().includes(searchQuery) ||
-      item.Titre.toLowerCase().includes(searchQuery.toLowerCase())
+      item.num.toString().includes(searchQuery) ||
+      item.nom.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.capacite.toString().includes(searchQuery)
     );
   });
 
@@ -68,53 +77,56 @@ const Avion= () => {
         : '',
   });
 
-  
-
   const handleAddAvion = () => {
-    
+    navigate('/avion/ajouterAvion');
+  };
+
+  const modifierAvion = (id) => {
+    navigate(`/avion/modifierAvion/${id}`);
+  };
+
+  const supprimerAvion = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8080/api/avion/${id}`);
+      setData(data.filter((item) => item.id !== id));
+      message.success('Avion supprimé avec succès!');
+    } catch (error) {
+      console.error('Error deleting avion:', error);
+      message.error('Erreur lors de la suppression de l\'avion. Veuillez réessayer.');
+    }
   };
  
-  const modifierAvion = (id) => {
-    
-  };
-  
-  
-  const voirAvion = (id) => {
-   
-  };
 
   const columns = [
     {
       title: 'Numero d avion',
       dataIndex: 'num',
       key: 'num',
-      sorter: (a, b) => a.id - b.id,
-      ...getColumnSearchProps('num', 'num'),
+      sorter: (a, b) => a.num - b.num,
+      ...getColumnSearchProps('num', 'Numero d avion'),
     },
     {
       title: 'Nom d Avion',
       dataIndex: 'nom',
       key: 'nom',
       render: (text) => <a>{text}</a>,
-      ...getColumnSearchProps('nom', 'nom'),
+      ...getColumnSearchProps('nom', 'Nom d Avion'),
     },
     {
       title: 'Capacite',
       dataIndex: 'capacite',
       key: 'capacite',
-      ...getColumnSearchProps('capacite', 'capacite'),
+      ...getColumnSearchProps('capacite', 'Capacite'),
     },
-   
     {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <Button onClick={() => voirAvion(record.id)}>Voir</Button>
-          <Button type="primary" onClick={() => modifierAvion(record.id)}>Modifier</Button>
-          <Button danger >
-            Supprimer
+          <Button type="primary" onClick={() => modifierAvion(record.num)}>
+            Modifier
           </Button>
+          <Button danger onClick={() => supprimerAvion(record.num)}>Supprimer</Button>
         </Space>
       ),
     },

@@ -53,17 +53,14 @@ const Passager = () => {
 
   const handleAddPassager = () => {
     // Navigate to the page for adding a new passenger
-    navigate('/ajouterPassager');
+    navigate('/passager/ajouterPassager');
   };
 
-  const voirPassager = (id) => {
-    // Implement the logic to view a passenger's details
-    // For example: navigate(`/passagers/${id}`);
-  };
+
 
   const modifierPassager = (id) => {
     // Implement the logic to modify a passenger's details
-    // For example: navigate(`/passagers/${id}/edit`);
+    navigate(`/passager/modifierPassager/${id}`);
   };
 
   const handleDeletePassager = async (id) => {
@@ -114,7 +111,7 @@ const Passager = () => {
           key="action"
           render={(_, record) => (
             <Space size="middle">
-              <Button onClick={() => voirPassager(record.cin)}>Voir</Button>
+              
               <Button type="primary" onClick={() => modifierPassager(record.cin)}>
                 Modifier
               </Button>

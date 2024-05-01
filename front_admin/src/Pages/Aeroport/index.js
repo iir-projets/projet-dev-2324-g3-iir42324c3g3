@@ -91,16 +91,16 @@ const Aeroport= () => {
     },
     {
       title: 'Nom Aeroport',
-      dataIndex: 'nom',
-      key: 'nom',
+      dataIndex: 'nom_aeroport',
+      key: 'nom_aeroport',
       render: (text) => <a>{text}</a>,
-      ...getColumnSearchProps('nom', 'nom'),
+      ...getColumnSearchProps('nom_aeroport', 'nom_aeroport'),
     },
     {
       title: 'Ville',
-      dataIndex: 'Ville',
-      key: 'Ville',
-      ...getColumnSearchProps('Ville', 'Ville'),
+      dataIndex: 'ville',
+      key: 'ville',
+      ...getColumnSearchProps('ville', 'ville'),
     },
     {
       title: 'Pays',

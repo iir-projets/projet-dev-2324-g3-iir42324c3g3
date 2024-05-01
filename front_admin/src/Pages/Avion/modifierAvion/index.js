@@ -1,8 +1,26 @@
-import React from 'react';
-import { Button, Form, Input, Space } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Button, Form, Input, Space, message } from 'antd';
+import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const ModifierAvion = () => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+  useEffect(() => {
+    const fetchAvionData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/avion/${id}`);
+        form.setFieldsValue(response.data);
+      } catch (error) {
+        console.error('Error fetching avion data:', error);
+        message.error('Erreur lors de la récupération des données de l\'avion. Veuillez réessayer.');
+      }
+    };
+
+    fetchAvionData();
+  }, [form, id]);
 
   const SubmitButton = ({ children }) => {
     const [submittable, setSubmittable] = React.useState(false);
@@ -25,21 +43,23 @@ const ModifierAvion = () => {
     );
   };
 
+  const onFinish = async (values) => {
+    try {
+      await axios.put(`http://localhost:8080/api/avion/${id}`, values);
+      message.success('Avion modifié avec succès!');
+      navigate('/avion');
+    } catch (error) {
+      console.error('Error updating avion:', error);
+      message.error('Erreur lors de la modification de l\'avion. Veuillez réessayer.');
+    }
+  };
+
   return (
-    <Form form={form} name="validateOnly" layout="vertical" autoComplete="off">
+    <Form form={form} name="validateOnly" layout="vertical" autoComplete="off" onFinish={onFinish}>
+    
+
       <Form.Item
-        name="numeroAvion"
-        label="Numéro d'Avion"
-        rules={[
-          {
-            required: true,
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name="nomAvion"
+        name="nom"
         label="Nom d'Avion"
         rules={[
           {
@@ -60,15 +80,12 @@ const ModifierAvion = () => {
       >
         <Input />
       </Form.Item>
-      <Form.Item >
-      <Space>
-        
-            <Button type="primary" htmlType="submit" className="submit-button">
-              Modifier
-            </Button>
-            <Button htmlType="reset">Reset</Button>
+      <Form.Item>
+        <Space>
+          <SubmitButton>Modifier</SubmitButton>
+          <Button htmlType="reset">Reset</Button>
         </Space>
-          </Form.Item>
+      </Form.Item>
     </Form>
   );
 };

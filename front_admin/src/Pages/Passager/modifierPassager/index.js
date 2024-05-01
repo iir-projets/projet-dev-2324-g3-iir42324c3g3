@@ -1,8 +1,44 @@
 import React from 'react';
-import { Button, Form, Input, Space } from 'antd';
+import { useState, useEffect } from 'react';
+import { Button, Form, Input, Space,message } from 'antd';
+import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
+
+
 
 const ModifierPassager = () => {
   const [form] = Form.useForm();
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [initialValues, setInitialValues] = useState({});
+
+
+  useEffect(() => {
+    const fetchPassagerData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/Passager/${id}`);
+        setInitialValues(response.data);
+        form.setFieldsValue(response.data);
+      } catch (error) {
+        console.error('Error fetching passager data:', error);
+        message.error('Erreur lors de la récupération des données du passager. Veuillez réessayer.');
+      }
+    };
+
+    fetchPassagerData();
+  }, [form, id]);
+
+  const onFinish = async (values) => {
+    try {
+      await axios.put(`http://localhost:8080/api/Passager/${id}`, values);
+      message.success('Passager modifié avec succès!');
+      navigate('/passager');
+    } catch (error) {
+      console.error('Error updating passager:', error);
+      message.error('Erreur lors de la modification du passager. Veuillez réessayer.');
+    }
+  };
+ 
 
   const SubmitButton = ({ children }) => {
     const [submittable, setSubmittable] = React.useState(false);
@@ -25,8 +61,9 @@ const ModifierPassager = () => {
     );
   };
 
+  
   return (
-    <Form form={form} name="validateOnly" layout="vertical" autoComplete="off">
+    <Form form={form} name="validateOnly" layout="vertical" autoComplete="off" onFinish={onFinish} initialValues={initialValues}>
       <Form.Item
         name="cin"
         label="CIN"
@@ -39,7 +76,7 @@ const ModifierPassager = () => {
         <Input />
       </Form.Item>
       <Form.Item
-        name="nomPassager"
+        name="nom"
         label="Nom du Passager"
         rules={[
           {
@@ -50,7 +87,7 @@ const ModifierPassager = () => {
         <Input />
       </Form.Item>
       <Form.Item
-        name="prenomPassager"
+        name="prenom"
         label="Prénom du Passager"
         rules={[
           {
@@ -61,7 +98,7 @@ const ModifierPassager = () => {
         <Input />
       </Form.Item>
       <Form.Item
-        name="emailPassager"
+        name="email"
         label="Email du Passager"
         rules={[
           {
@@ -73,7 +110,7 @@ const ModifierPassager = () => {
         <Input />
       </Form.Item>
       <Form.Item
-        name="adressePassager"
+        name="adresse"
         label="Adresse du Passager"
         rules={[
           {
@@ -84,7 +121,7 @@ const ModifierPassager = () => {
         <Input />
       </Form.Item>
       <Form.Item
-        name="telephonePassager"
+        name="telephone"
         label="Téléphone du Passager"
         rules={[
           {
