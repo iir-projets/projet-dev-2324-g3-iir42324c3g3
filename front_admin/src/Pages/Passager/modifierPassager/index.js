@@ -94,12 +94,15 @@ const ModifierPassager = () => {
       >
         <Input />
       </Form.Item>
-      <Form.Item>
-        <Space>
-          <SubmitButton>Modifier</SubmitButton>
-          <Button htmlType="reset">Reset</Button>
+      <Form.Item >
+      <Space>
+        
+            <Button type="primary" htmlType="submit" className="submit-button">
+              Modifier
+            </Button>
+            <Button htmlType="reset">Reset</Button>
         </Space>
-      </Form.Item>
+          </Form.Item>
     </Form>
   );
 };
