@@ -45,7 +45,7 @@ const AppComponents = () => {
   };
 
   return (
-    <Layout>
+    <Layout style={{ minHeight: '100vh' }}>
       <Sider trigger={null} collapsible collapsed={collapsed}
       style={{backgroundColor:"#023047"}}
       >
@@ -88,11 +88,7 @@ const AppComponents = () => {
                 icon: <SolutionOutlined />,
                 label: 'Gestion Aeroport',
               },
-              {
-                key: '/cooraeroport',
-                icon: <SolutionOutlined />,
-                label: 'Gestion Coordonnées',
-              },
+            
               {
                 key: '/passager',
                 icon: <SolutionOutlined />,

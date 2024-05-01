@@ -97,7 +97,7 @@ const Vol = () => {
       ...getColumnSearchProps('dateDepart', 'dateDepart'),
     },
     {
-      title: 'Date D arriver',
+      title: 'Date d arrivée',
       dataIndex: 'dateArrive',
       key: 'dateArrive',
       ...getColumnSearchProps('dateArrive', 'dateArrive'),
@@ -109,7 +109,7 @@ const Vol = () => {
       ...getColumnSearchProps('aeroportDepart', 'aeroportDepart'),
     },
     {
-      title: 'aeroport D arriver',
+      title: 'aeroport d arrivée',
       dataIndex: 'aeroportArriver ',
       key: 'aeroportArriver',
       ...getColumnSearchProps('aeroportArriver', 'aeroportArriver'),
