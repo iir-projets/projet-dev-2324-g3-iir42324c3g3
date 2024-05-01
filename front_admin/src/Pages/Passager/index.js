@@ -1,25 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import './style.css';
-import { Table, Pagination, Space, Button, Input, message } from 'antd';
+import { Table, Space, Button, Input, message } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { useNavigate  } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-
-const showTotal = (total) => `Total ${total} items`;
+const { Column } = Table;
 
 const Passager = () => {
-  const [current, setCurrent] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
- 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
-  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/Passager', {
+          params: {
+            page: currentPage - 1,
+            size: 5,
+          },
+        });
+        console.log(response.data);
+        setData(response.data);
+        setTotalPages(response.data.totalPages);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        message.error('Error fetching data. Please try again later.');
+      }
+    };
 
-  
+    fetchData();
+  }, [currentPage]);
 
   const onChange = (page) => {
-    setCurrent(page);
+    setCurrentPage(page);
   };
 
   const onSearch = (value) => {
@@ -28,113 +45,37 @@ const Passager = () => {
 
   const filteredData = data.filter((item) => {
     return (
-      item.id.toString().includes(searchQuery) ||
-      item.Titre.toLowerCase().includes(searchQuery.toLowerCase())
+      item.cin.includes(searchQuery) ||
+      item.nom.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.prenom.toLowerCase().includes(searchQuery.toLowerCase())
     );
   });
 
-  const getColumnSearchProps = (dataIndex, title) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          placeholder={`Search ${title}`}
-          value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => confirm()}
-          style={{ marginBottom: 8, display: 'block' }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => confirm()}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Search
-          </Button>
-          <Button onClick={() => clearFilters()} size="small" style={{ width: 90 }}>
-            Reset
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-    onFilter: (value, record) =>
-      record[dataIndex]
-        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
-        : '',
-  });
-
-  
-
   const handleAddPassager = () => {
-    
-  };
- 
-  const modifierPassager = (id) => {
-    
-  };
-  
-  
-  const voirPassager = (id) => {
-   
+    // Navigate to the page for adding a new passenger
+    navigate('/ajouterPassager');
   };
 
-  const columns = [
-    {
-      title: 'CIN',
-      dataIndex: 'CIN',
-      key: 'CIN',
-      sorter: (a, b) => a.id - b.id,
-      ...getColumnSearchProps('CIN', 'CIN'),
-    },
-    {
-      title: 'Nom de Passager',
-      dataIndex: 'nom',
-      key: 'nom',
-      render: (text) => <a>{text}</a>,
-      ...getColumnSearchProps('nom', 'nom'),
-    },
-    {
-      title: 'Prenom de Passager',
-      dataIndex: 'prenom',
-      key: 'prenom',
-      ...getColumnSearchProps('prenom', 'prenom'),
-    },
-    {
-      title: 'Email de Passager',
-      dataIndex: 'email',
-      key: 'email',
-      ...getColumnSearchProps('email', 'email'),
-    },
-    {
-      title: 'Adress de Passager',
-      dataIndex: 'adress',
-      key: 'adress',
-      ...getColumnSearchProps('adress', 'adress'),
-    },
-    {
-      title: 'Telephone de Passager',
-      dataIndex: 'telephone ',
-      key: 'telephone',
-      ...getColumnSearchProps('telephone', 'telephone'),
-    },
-    
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <Button onClick={() => voirPassager(record.id)}>Voir</Button>
-          <Button type="primary" onClick={() => modifierPassager(record.id)}>Modifier</Button>
-          <Button danger >
-            Supprimer
-          </Button>
-        </Space>
-      ),
-    },
-  ];
+  const voirPassager = (id) => {
+    // Implement the logic to view a passenger's details
+    // For example: navigate(`/passagers/${id}`);
+  };
+
+  const modifierPassager = (id) => {
+    // Implement the logic to modify a passenger's details
+    // For example: navigate(`/passagers/${id}/edit`);
+  };
+
+  const handleDeletePassager = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8080/api/Passager/${id}`);
+      setData(data.filter((passager) => passager.cin !== id));
+      message.success('Passager supprimé avec succès!');
+    } catch (error) {
+      console.error('Error deleting passager:', error);
+      message.error('Error deleting passager. Please try again later.');
+    }
+  };
 
   return (
     <>
@@ -142,27 +83,48 @@ const Passager = () => {
 
       <div className="searchContainer">
         <Input
-          placeholder="Rechercher un vol"
+          placeholder="Rechercher un passager"
           className="searchInput"
           onChange={(e) => onSearch(e.target.value)}
         />
         <Button type="primary" icon={<SearchOutlined />} className="searchButton"></Button>
         <Button type="primary" className="addButton leftButton" onClick={handleAddPassager}>
-          Ajouter un Passager
+          Ajouter un passager
         </Button>
       </div>
 
       <Table
-        columns={columns}
         dataSource={filteredData}
         pagination={{
-          current: current,
+          current: currentPage,
           pageSize: 5,
-          total: filteredData.length,
+          total: data.length,
           onChange: onChange,
-          showTotal: showTotal,
+          showTotal: (total) => `Total ${total} items`,
         }}
-      />
+      >
+        <Column title="CIN" dataIndex="cin" key="cin" />
+        <Column title="Nom de Passager" dataIndex="nom" key="nom" />
+        <Column title="Prénom de Passager" dataIndex="prenom" key="prenom" />
+        <Column title="Email de Passager" dataIndex="email" key="email" />
+        <Column title="Adresse de Passager" dataIndex="adresse" key="adresse" />
+        <Column title="Téléphone de Passager" dataIndex="telephone" key="telephone" />
+        <Column
+          title="Action"
+          key="action"
+          render={(_, record) => (
+            <Space size="middle">
+              <Button onClick={() => voirPassager(record.cin)}>Voir</Button>
+              <Button type="primary" onClick={() => modifierPassager(record.cin)}>
+                Modifier
+              </Button>
+              <Button danger onClick={() => handleDeletePassager(record.cin)}>
+                Supprimer
+              </Button>
+            </Space>
+          )}
+        />
+      </Table>
     </>
   );
 };
