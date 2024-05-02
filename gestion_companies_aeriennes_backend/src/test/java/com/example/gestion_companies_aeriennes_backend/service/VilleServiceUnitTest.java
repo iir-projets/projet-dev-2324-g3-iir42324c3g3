@@ -42,13 +42,12 @@ public class VilleServiceUnitTest {
 	@Test
 	@DisplayName("TestUnit :creation d'une ville")
 	 public void createVille() {
-		Ville ville = new Ville();
 		VilleDTO v1DTO=new VilleDTO();
 		v1DTO.setNum(1);
 		v1DTO.setLibelle("marrakech");
 		v1DTO.setMatricule_pays(1);
 		when(paysRepository.findById(v1DTO.getMatricule_pays())).thenReturn(Optional.of(new Pays()));
-		when(villeRepository.save(any(Ville.class))).thenReturn(ville);
+		when(villeRepository.save(any(Ville.class))).thenReturn(new Ville());
 		
 		
 		VilleDTO newVille = villeService.createVille(v1DTO);
@@ -61,18 +60,8 @@ public class VilleServiceUnitTest {
 	@DisplayName("TestUnit :récupération des ville")
 	 public void getAllVilles() {
 		 List<Ville> villes = new ArrayList<>();
-	        Ville ville1 = new Ville();
-	        Pays p1=new Pays();
-	        Pays p2=new Pays();
-	        ville1.setNum(1);
-	        ville1.setLibelle("Ville 1");
-	        ville1.setPays(p1);
-	        Ville ville2 = new Ville();
-	        ville2.setNum(2);
-	        ville2.setLibelle("Ville 2");
-	        ville2.setPays(p2);
-	        villes.add(ville1);
-	        villes.add(ville2);
+	        villes.add(new Ville());
+	        villes.add(new Ville());
 	        
         
         when(villeRepository.findAll()).thenReturn(villes);

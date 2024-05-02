@@ -27,6 +27,6 @@ public class Ville {
 	@Column
 	private String libelle;
 	@ManyToOne
-	@JoinColumn(name="avion")
+	@JoinColumn(name="Pays")
 	private Pays pays;
 }
