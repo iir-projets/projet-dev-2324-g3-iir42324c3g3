@@ -1,9 +1,8 @@
-import React from 'react';
-import { Form, Input, Button,  Select,Checkbox } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Form, Input, Button, Select, message } from 'antd';
 import './index.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
 
 const layout = {
   labelCol: {
@@ -26,9 +25,54 @@ const filterOption = (input, option) =>
 
 const AjouterAeroport = () => {
   const navigate = useNavigate();
+  const [ville, setVilles] = useState([]);
+  const [pays, setPays] = useState([]);
+  
+
+  useEffect(() => {
+    const fetchVilles = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/Ville');
+        setVilles(
+          response.data.map((ville) => ({
+            value: ville.libelle,
+            label: ville.libelle,
+          }))
+        );
+      } catch (error) {
+        console.error('Error fetching cities:', error);
+        message.error('Erreur lors de la récupération des villes');
+      }
+    };
+
+    const fetchPays = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/pays');
+        setPays(
+          response.data.map((pays) => ({
+            value: pays.libelle,
+            label: pays.libelle,
+          }))
+        );
+      } catch (error) {
+        console.error('Error fetching countries:', error);
+        message.error('Erreur lors de la récupération des pays');
+      }
+    };
+
+    fetchVilles();
+    fetchPays();
+  }, []);
 
   const onFinish = async (values) => {
-    
+    try {
+      await axios.post('http://localhost:8080/api/aeroport', values);
+      message.success('Aéroport ajouté avec succès!');
+      navigate('/aeroport');
+    } catch (error) {
+      console.error('Error adding aeroport:', error);
+      message.error('Erreur lors de l\'ajout de l\'aéroport. Veuillez réessayer.');
+    }
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -37,7 +81,7 @@ const AjouterAeroport = () => {
 
   return (
     <>
-      <h1 className="form-title">Ajouter un vol</h1>
+      <h1 className="form-title">Ajouter un aeroport</h1>
       <div className="form-container">
         <Form
           {...layout}
@@ -45,8 +89,7 @@ const AjouterAeroport = () => {
           onFinishFailed={onFinishFailed}
           className="my-form"
         >
-
-<Form.Item
+          <Form.Item
             label="Nom d'aeroport"
             name="nom_aeroport"
             rules={[
@@ -58,66 +101,42 @@ const AjouterAeroport = () => {
           >
             <Input />
           </Form.Item>
-          <Form.Item style={{width:"500px"}}
-            label="ville d'aeroport"
+          <Form.Item
+            label="Ville d'aeroport"
             name="ville"
-           
+            rules={[
+              {
+                required: true,
+                message: 'Veuillez sélectionner une ville',
+              },
+            ]}
           >
-
-          <Select
-    showSearch
-    placeholder="Selectionner ville"
-    optionFilterProp="children"
-    onChange
-    onSearch
-    filterOption={filterOption}
-    options={[
-      {
-        value: 'jack',
-        label: 'Jack',
-      },
-      {
-        value: 'lucy',
-        label: 'Lucy',
-      },
-      {
-        value: 'tom',
-        label: 'Tom',
-      },
-    ]}
-  />
+            <Select
+              showSearch
+              placeholder="Sélectionner une ville"
+              optionFilterProp="children"
+              filterOption={filterOption}
+              options={ville}
+            />
           </Form.Item>
-        
-          <Form.Item style={{width:"500px"}}
-            label="pays d'aeroport"
+          <Form.Item
+            label="Pays d'aeroport"
             name="pays"
-           
+            rules={[
+              {
+                required: true,
+                message: 'Veuillez sélectionner un pays',
+              },
+            ]}
           >
-
-          <Select
-    showSearch
-    placeholder="Selectionner  pays"
-    optionFilterProp="children"
-    onChange
-    onSearch
-    filterOption={filterOption}
-    options={[
-      {
-        value: 'jack',
-        label: 'Jack',
-      },
-      {
-        value: 'lucy',
-        label: 'Lucy',
-      },
-      {
-        value: 'tom',
-        label: 'Tom',
-      },
-    ]}
-  />
+            <Select
+              showSearch
+              placeholder="Sélectionner un pays"
+              optionFilterProp="children"
+              filterOption={filterOption}
+              options={pays}
+            />
           </Form.Item>
-
           <Form.Item {...tailLayout}>
             <Button type="primary" htmlType="submit" className="submit-button">
               Ajouter

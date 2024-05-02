@@ -1,22 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import './index.css';
-import { Table, Pagination, Space, Button, Input, message } from 'antd';
+import { Table, Pagination, Space, Button, Input, message, Spin } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { useNavigate  } from 'react-router-dom'; 
-
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const showTotal = (total) => `Total ${total} items`;
 
 const Vol = () => {
   const [current, setCurrent] = useState(1);
-  const [data, setData] = useState([]);
+  const [volData, setVolData] = useState([]);
+  const [aeroportData, setAeroportData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
- 
-  const navigate = useNavigate(); 
+  const [loading, setLoading] = useState(true);
 
-  
+  const navigate = useNavigate();
 
-  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [volResponse, aeroportResponse] = await Promise.all([
+          axios.get('http://localhost:8080/api/vols'),
+          axios.get('http://localhost:8080/api/aeroport'),
+        ]);
+        setVolData(volResponse.data);
+        setAeroportData(aeroportResponse.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        message.error('Erreur lors de la récupération des données. Veuillez réessayer.');
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const onChange = (page) => {
     setCurrent(page);
@@ -26,10 +44,11 @@ const Vol = () => {
     setSearchQuery(value);
   };
 
-  const filteredData = data.filter((item) => {
+  const filteredData = volData.filter((item) => {
     return (
-      item.id.toString().includes(searchQuery) ||
-      item.Titre.toLowerCase().includes(searchQuery.toLowerCase())
+      item.num.toString().includes(searchQuery) ||
+      item.date_depart.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.date_arrive.toLowerCase().includes(searchQuery.toLowerCase())
     );
   });
 
@@ -66,19 +85,16 @@ const Vol = () => {
         : '',
   });
 
-  
-
   const handleAddMonument = () => {
-    
+    navigate('/vol/ajouterVol');
   };
- 
+
   const modifierMonument = (id) => {
-    
+    navigate(`/vol/modifierVol/${id}`);
   };
-  
-  
+
   const voirMonuments = (id) => {
-   
+    navigate(`/vol/voirVol/${id}`);
   };
 
   const columns = [
@@ -86,57 +102,68 @@ const Vol = () => {
       title: 'Numero de Vol',
       dataIndex: 'num',
       key: 'num',
-      sorter: (a, b) => a.id - b.id,
-      ...getColumnSearchProps('num', 'num'),
+      sorter: (a, b) => a.num - b.num,
+      ...getColumnSearchProps('num', 'Numero de Vol'),
     },
     {
       title: 'Date de Depart',
-      dataIndex: 'dateDepart',
-      key: 'dateDepart',
+      dataIndex: 'date_depart',
+      key: 'date_depart',
       render: (text) => <a>{text}</a>,
-      ...getColumnSearchProps('dateDepart', 'dateDepart'),
+      ...getColumnSearchProps('date_depart', 'Date de Depart'),
     },
     {
-      title: 'Date d arrivée',
-      dataIndex: 'dateArrive',
-      key: 'dateArrive',
-      ...getColumnSearchProps('dateArrive', 'dateArrive'),
+      title: 'Date d\'arrivée',
+      dataIndex: 'date_arrive',
+      key: 'date_arrive',
+      ...getColumnSearchProps('date_arrive', 'Date d\'arrivée'),
     },
     {
       title: 'Aeroport de depart',
-      dataIndex: 'aeroportDepart',
-      key: 'aeroportDepart',
-      ...getColumnSearchProps('aeroportDepart', 'aeroportDepart'),
+      dataIndex: 'id_aeroport_depart',
+      key: 'id_aeroport_depart',
+      render: (id) => {
+        const aeroport = aeroportData.find((item) => item.num === id);
+        return aeroport ? aeroport.nom_aeroport : '';
+      },
+      ...getColumnSearchProps('id_aeroport_depart', 'Aeroport de depart'),
     },
     {
-      title: 'aeroport d arrivée',
-      dataIndex: 'aeroportArriver ',
-      key: 'aeroportArriver',
-      ...getColumnSearchProps('aeroportArriver', 'aeroportArriver'),
+      title: 'Aeroport d\'arrivée',
+      dataIndex: 'id_aeroport_arrive',
+      key: 'id_aeroport_arrive',
+      render: (id) => {
+        const aeroport = aeroportData.find((item) => item.num === id);
+        return aeroport ? aeroport.nom_aeroport : '';
+      },
+      ...getColumnSearchProps('id_aeroport_arrive', 'Aeroport d\'arrivée'),
     },
     {
-      title: 'aeroport Escal ',
-      dataIndex: 'aeroportescal',
-      key: 'aeroportescal',
-      ...getColumnSearchProps('aeroportescal', 'aeroportescal'),
+      title: 'Aeroport Escale',
+      dataIndex: 'id_aeroport_escal',
+      key: 'id_aeroport_escal',
+      render: (id) => {
+        const aeroport = aeroportData.find((item) => item.num === id);
+        return aeroport ? aeroport.nom_aeroport : '';
+      },
+      ...getColumnSearchProps('id_aeroport_escal', 'Aeroport Escale'),
     },
     {
-      title: 'Date Escal ',
-      dataIndex: 'dateEscal',
-      key: 'dateEscal',
-      ...getColumnSearchProps('dateEscal', 'dateEscal'),
+      title: 'Date Escale',
+      dataIndex: 'escal_date',
+      key: 'escal_date',
+      ...getColumnSearchProps('escal_date', 'Date Escale'),
     },
-    
     {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <Button onClick={() => voirMonuments(record.id)}>Voir</Button>
-          <Button type="primary" onClick={() => modifierMonument(record.id)}>Modifier</Button>
-          <Button danger >
-            Supprimer
+          <Button onClick={() => voirMonuments(record.num)}>Voir</Button>
+          <Button type="primary" onClick={() => modifierMonument(record.num)}>
+            Modifier
           </Button>
+          <Button danger>Supprimer</Button>
         </Space>
       ),
     },
@@ -158,17 +185,23 @@ const Vol = () => {
         </Button>
       </div>
 
-      <Table
-        columns={columns}
-        dataSource={filteredData}
-        pagination={{
-          current: current,
-          pageSize: 5,
-          total: filteredData.length,
-          onChange: onChange,
-          showTotal: showTotal,
-        }}
-      />
+      {loading ? (
+        <div className="loading-container">
+          <Spin size="large" />
+        </div>
+      ) : (
+        <Table
+          columns={columns}
+          dataSource={filteredData}
+          pagination={{
+            current: current,
+            pageSize: 5,
+            total: filteredData.length,
+            onChange: onChange,
+            showTotal: showTotal,
+          }}
+        />
+      )}
     </>
   );
 };

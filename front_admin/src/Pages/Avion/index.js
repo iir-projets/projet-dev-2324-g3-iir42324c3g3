@@ -11,6 +11,24 @@ const Avion = () => {
   const [current, setCurrent] = useState(1);
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [needRefresh, setNeedRefresh] = useState(false);
+
+
+
+  useEffect(() => {
+    const fetchAvionData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/avion');
+        setData(response.data);
+      } catch (error) {
+        console.error('Error fetching avion data:', error);
+        message.error('Erreur lors de la récupération des données des avions. Veuillez réessayer.');
+      }
+    };
+
+    fetchAvionData();
+  }, [needRefresh]);
+
 
   const navigate = useNavigate();
 
@@ -90,6 +108,8 @@ const Avion = () => {
       await axios.delete(`http://localhost:8080/api/avion/${id}`);
       setData(data.filter((item) => item.id !== id));
       message.success('Avion supprimé avec succès!');
+      setNeedRefresh(!needRefresh);
+
     } catch (error) {
       console.error('Error deleting avion:', error);
       message.error('Erreur lors de la suppression de l\'avion. Veuillez réessayer.');

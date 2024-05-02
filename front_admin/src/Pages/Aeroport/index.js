@@ -2,21 +2,48 @@ import React, { useState, useEffect } from 'react';
 import './style.css';
 import { Table, Pagination, Space, Button, Input, message } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { useNavigate  } from 'react-router-dom'; 
-
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const showTotal = (total) => `Total ${total} items`;
 
-const Aeroport= () => {
+const Aeroport = () => {
   const [current, setCurrent] = useState(1);
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
- 
-  const navigate = useNavigate(); 
+  const [needRefresh, setNeedRefresh] = useState(false);
 
-  
 
-  
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/aeroport');
+        setData(response.data);
+      } catch (error) {
+        console.error('Error fetching aeroports:', error);
+        message.error('Erreur lors de la récupération des aéroports');
+      }
+    };
+
+    fetchData();
+  }, [needRefresh]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchAeroportData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/aeroport');
+        setData(response.data);
+      } catch (error) {
+        console.error('Error fetching aeroport data:', error);
+        message.error('Erreur lors de la récupération des données des aéroports. Veuillez réessayer.');
+      }
+    };
+
+    fetchAeroportData();
+  }, []);
 
   const onChange = (page) => {
     setCurrent(page);
@@ -28,57 +55,40 @@ const Aeroport= () => {
 
   const filteredData = data.filter((item) => {
     return (
-      item.id.toString().includes(searchQuery) ||
-      item.Titre.toLowerCase().includes(searchQuery.toLowerCase())
+      (item.id && item.id.toString().includes(searchQuery)) ||
+      (item.nom_aeroport && item.nom_aeroport.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (item.ville && item.ville.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (item.pays && item.pays.toLowerCase().includes(searchQuery.toLowerCase()))
     );
   });
 
   const getColumnSearchProps = (dataIndex, title) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          placeholder={`Search ${title}`}
-          value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => confirm()}
-          style={{ marginBottom: 8, display: 'block' }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => confirm()}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Search
-          </Button>
-          <Button onClick={() => clearFilters()} size="small" style={{ width: 90 }}>
-            Reset
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-    onFilter: (value, record) =>
-      record[dataIndex]
-        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
-        : '',
+    // ... (existing code)
   });
 
-  
-
   const handleAddAeroport = () => {
-    
+    navigate('/aeroport/ajouterAeroport');
   };
- 
+
   const modifierAeroport = (id) => {
-    
+    navigate(`/aeroport/modifierAeroport/${id}`);
   };
-  
-  
+
   const voirAeroport = (id) => {
-   
+    navigate(`/aeroport/view/${id}`);
+  };
+
+  const supprimerAeroport = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8080/api/aeroport/${id}`);
+      setData(data.filter((item) => item.id !== id));
+      message.success('Aéroport supprimé avec succès!');
+      setNeedRefresh(!needRefresh);
+
+    } catch (error) {
+      console.error('Error deleting aeroport:', error);
+      message.error('Erreur lors de la suppression de l\'aéroport. Veuillez réessayer.');
+    }
   };
 
   const columns = [
@@ -108,16 +118,16 @@ const Aeroport= () => {
       key: 'pays',
       ...getColumnSearchProps('pays', 'pays'),
     },
-   
-    
     {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
           <Button onClick={() => voirAeroport(record.id)}>Voir</Button>
-          <Button type="primary" onClick={() => modifierAeroport(record.id)}>Modifier</Button>
-          <Button danger >
+          <Button type="primary" onClick={() => modifierAeroport(record.num)}>
+            Modifier
+          </Button>
+          <Button danger onClick={() => supprimerAeroport(record.num)}>
             Supprimer
           </Button>
         </Space>
