@@ -1,22 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import './style.css';
-import { Table, Pagination, Space, Button, Input, message } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
-import { useNavigate  } from 'react-router-dom'; 
+import { Table, Pagination, Space, Button, Input, message, Modal } from 'antd';
+import { SearchOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
+const { confirm } = Modal;
 
 const showTotal = (total) => `Total ${total} items`;
 
-const Reservation= () => {
+const Reservation = () => {
   const [current, setCurrent] = useState(1);
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
- 
-  const navigate = useNavigate(); 
 
-  
+  const navigate = useNavigate();
 
-  
+  useEffect(() => {
+    fetchReservationData();
+  }, []);
+
+  const fetchReservationData = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/reservation');
+      setData(response.data);
+    } catch (error) {
+      console.error('Error fetching reservation data:', error);
+      message.error('Error fetching reservation data');
+    }
+  };
 
   const onChange = (page) => {
     setCurrent(page);
@@ -29,7 +41,11 @@ const Reservation= () => {
   const filteredData = data.filter((item) => {
     return (
       item.id.toString().includes(searchQuery) ||
-      item.Titre.toLowerCase().includes(searchQuery.toLowerCase())
+      item.passager.toString().includes(searchQuery) ||
+      item.nbr_place_res.toString().includes(searchQuery) ||
+      item.prix_reservation.toString().includes(searchQuery) ||
+      item.statut.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.vol.toString().includes(searchQuery)
     );
   });
 
@@ -66,19 +82,30 @@ const Reservation= () => {
         : '',
   });
 
-  
-
   const handleAddReservation = () => {
-    
+    navigate('/reservation/ajouterReservation');
   };
- 
+
   const modifierReservation = (id) => {
-    
+    navigate(`/reservation/modifierReservation/${id}`);
   };
-  
-  
-  const voirReservation = (id) => {
-   
+
+  const handleDelete = (id) => {
+    confirm({
+      title: 'Do you want to delete this reservation?',
+      icon: <ExclamationCircleOutlined />,
+      content: 'This action cannot be undone.',
+      onOk: async () => {
+        try {
+          await axios.delete(`http://localhost:8080/api/reservation/${id}`);
+          message.success('Reservation deleted successfully');
+          fetchReservationData(); // Refresh table after deletion
+        } catch (error) {
+          console.error('Error deleting reservation:', error);
+          message.error('Error deleting reservation');
+        }
+      },
+    });
   };
 
   const columns = [
@@ -87,48 +114,48 @@ const Reservation= () => {
       dataIndex: 'id',
       key: 'id',
       sorter: (a, b) => a.id - b.id,
-      ...getColumnSearchProps('id', 'id'),
+      ...getColumnSearchProps('id', 'ID Reservation'),
     },
     {
       title: 'CIN passager',
-      dataIndex: 'CIN',
-      key: 'CIN',
+      dataIndex: 'id_passager',
+      key: 'id_passager',
       render: (text) => <a>{text}</a>,
-      ...getColumnSearchProps('CIN', 'CIN'),
+      ...getColumnSearchProps('id_passager', 'CIN passager'),
     },
     {
       title: 'Nombre De Place',
-      dataIndex: 'nbrePlace',
-      key: 'nbrePlace',
-      ...getColumnSearchProps('nbrePlace', 'nbrePlace'),
+      dataIndex: 'nbr_place_res',
+      key: 'nbr_place_res',
+      ...getColumnSearchProps('nbr_place_res', 'Nombre De Place'),
     },
     {
       title: 'Prix De Reservation',
-      dataIndex: 'Prix',
-      key: 'Prix',
-      ...getColumnSearchProps('Prix', 'Prix'),
+      dataIndex: 'prix_reservation',
+      key: 'prix_reservation',
+      ...getColumnSearchProps('prix_reservation', 'Prix De Reservation'),
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      ...getColumnSearchProps('status', 'status'),
+      title: 'Statut',
+      dataIndex: 'statut',
+      key: 'statut',
+      ...getColumnSearchProps('statut', 'Statut'),
     },
     {
       title: 'Numero De Vol',
-      dataIndex: 'numVol',
-      key: 'numVol',
-      ...getColumnSearchProps('numVol', 'numVol'),
+      dataIndex: 'id_vol',
+      key: 'id_vol',
+      ...getColumnSearchProps('id_vol', 'Numero De Vol'),
     },
-    
     {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <Button onClick={() => voirReservation(record.id)}>Voir</Button>
-          <Button type="primary" onClick={() => modifierReservation(record.id)}>Modifier</Button>
-          <Button danger >
+          <Button type="primary" onClick={() => modifierReservation(record.id)}>
+            Modifier
+          </Button>
+          <Button danger onClick={() => handleDelete(record.id)}>
             Supprimer
           </Button>
         </Space>
@@ -138,17 +165,16 @@ const Reservation= () => {
 
   return (
     <>
-      <h1>Gestion Rerservation</h1>
-
+      <h1>Gestion Réservation</h1>
       <div className="searchContainer">
         <Input
-          placeholder="Rechercher une Reservation"
+          placeholder="Rechercher une Réservation"
           className="searchInput"
           onChange={(e) => onSearch(e.target.value)}
         />
         <Button type="primary" icon={<SearchOutlined />} className="searchButton"></Button>
         <Button type="primary" className="addButton leftButton" onClick={handleAddReservation}>
-          Ajouter une Reservation
+          Ajouter une Réservation
         </Button>
       </div>
 

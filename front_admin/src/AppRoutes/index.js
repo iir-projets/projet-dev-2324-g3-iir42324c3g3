@@ -53,13 +53,13 @@ function AppRoutes(){
 
           <Route path="/reservation" element={<Reservation />} />
           <Route path="/reservation/ajouterReservation" element={<AjouterReservation />} />
-          <Route path="/reservation/modifierReservation" element={<ModifierReservation />} />
+          <Route path="/reservation/modifierReservation/:id" element={<ModifierReservation />} />
 
 
 
           <Route path="/vol" element={<Vol />} />
           <Route path="/vol/ajouterVol" element={<AjouterVol />} />
-          <Route path="/vol/modifierVol" element={<ModifierVol />} />
+          <Route path="/vol/modifierVol/:id" element={<ModifierVol />} />
           </Route>
           </Routes>
         </AnimatePresence>

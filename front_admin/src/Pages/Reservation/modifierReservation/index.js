@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{ useState, useEffect } from 'react';
 import { Form, Input, Button,  Select,Checkbox } from 'antd';
 import './index.css';
 import axios from 'axios';
@@ -26,10 +26,43 @@ const filterOption = (input, option) =>
 
 const ModifierReservation = () => {
   const navigate = useNavigate();
+  const [passengers, setPassengers] = useState([]);
+  const [flights, setFlights] = useState([]);
+
+  useEffect(() => {
+    const fetchPassengers = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/Passager');
+        setPassengers(response.data);
+      } catch (error) {
+        console.error('Error fetching passengers:', error);
+      }
+    };
+
+    const fetchFlights = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/vols');
+        setFlights(response.data);
+      } catch (error) {
+        console.error('Error fetching flights:', error);
+      }
+    };
+
+    fetchPassengers();
+    fetchFlights();
+  }, []);
 
   const onFinish = async (values) => {
-    
+    try {
+      await axios.post('http://localhost:8080/api/reservation', values);
+      navigate('/reservation');
+    } catch (error) {
+      console.error('Error adding reservation:', error);
+    }
   };
+
+
+  
 
   const onFinishFailed = (errorInfo) => {
     console.log('Form submission failed:', errorInfo);
@@ -60,7 +93,7 @@ const ModifierReservation = () => {
           </Form.Item>
           <Form.Item
             label="Prix"
-            name="prix"
+            name="prix_reservation"
             rules={[
               {
                 required: true,
@@ -80,8 +113,7 @@ const ModifierReservation = () => {
     showSearch
     placeholder="Selectionner statut"
     optionFilterProp="children"
-    onChange
-    onSearch
+   
     filterOption={filterOption}
     options={[
       {
@@ -99,7 +131,7 @@ const ModifierReservation = () => {
         
           <Form.Item 
             label="Passager"
-            name="passager"
+            name="id_passager"
            
           >
 
@@ -107,23 +139,12 @@ const ModifierReservation = () => {
     showSearch
     placeholder="Selectionner  passager"
     optionFilterProp="children"
-    onChange
-    onSearch
+   
     filterOption={filterOption}
-    options={[
-      {
-        value: 'jack',
-        label: 'Jack',
-      },
-      {
-        value: 'lucy',
-        label: 'Lucy',
-      },
-      {
-        value: 'tom',
-        label: 'Tom',
-      },
-    ]}
+    options={passengers.map((passenger) => ({
+      value: passenger.cin,
+      label: passenger.cin,
+    }))}
   />
           </Form.Item>
 
@@ -131,7 +152,7 @@ const ModifierReservation = () => {
         
         <Form.Item 
           label="Vol"
-          name="vol"
+          name="id_vol"
          
         >
 
@@ -139,23 +160,12 @@ const ModifierReservation = () => {
   showSearch
   placeholder="Selectionner  vol"
   optionFilterProp="children"
-  onChange
-  onSearch
+  
   filterOption={filterOption}
-  options={[
-    {
-      value: 'jack',
-      label: 'Jack',
-    },
-    {
-      value: 'lucy',
-      label: 'Lucy',
-    },
-    {
-      value: 'tom',
-      label: 'Tom',
-    },
-  ]}
+  options={flights.map((flight) => ({
+    value: flight.num,
+    label: flight.num,
+  }))}
 />
         </Form.Item>
           
