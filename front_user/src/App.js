@@ -1,8 +1,10 @@
-import React, { useState } from 'react' ;
-import { Breadcrumb, Layout, Menu, theme, Card, Space,TreeSelect,DatePicker } from 'antd';
+import React, { useState } from 'react';
+import { Breadcrumb, Layout, Menu, theme, Card, Space, TreeSelect, DatePicker, Button } from 'antd';
 import './App.css';
+
 const { RangePicker } = DatePicker;
 const { Header, Content, Footer } = Layout;
+
 const treeData = [
   {
     title: 'Maroc',
@@ -32,8 +34,8 @@ const treeData = [
       },
     ],
   },
-
 ];
+
 const items = [
   { key: 1, label: 'Mes Réservations' },
   { key: 2, label: "S'inscrire" },
@@ -50,9 +52,13 @@ const App = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  return (
-    <Layout style={{minHeight:'100vh'}}>
+  const handleSearch = () => {
+    // Ajoutez ici la logique de recherche
+    console.log('Recherche effectuée');
+  };
 
+  return (
+    <Layout style={{ minHeight: '100vh' }}>
       <Header className="header">
         <div className="logo">Moroccan Airline</div>
         <Menu
@@ -64,11 +70,6 @@ const App = () => {
         />
       </Header>
       <Content className="content">
-        <Breadcrumb className="breadcrumb">
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>List</Breadcrumb.Item>
-          <Breadcrumb.Item>App</Breadcrumb.Item>
-        </Breadcrumb>
         <div
           className="content-container"
           style={{
@@ -76,38 +77,50 @@ const App = () => {
             borderRadius: borderRadiusLG,
           }}
         >
-          <Space
-    direction="vertical"
-    size="middle"
-    style={{
-      display: 'flex',
-    }}
-  >
-    <Card style={{ border: '1px solid', borderColor: '#000000' }} title="Card" size="small">
-    
-      <TreeSelect
-      style={{width: '35%',marginRight:'10px'}}value={value} dropdownStyle={{maxHeight: 400,overflow: 'auto',}}
-      treeData={treeData}
-      placeholder="Ville de Depart"
-      treeDefaultExpandAll
-      onChange={onChange}
-    /> 
-     <TreeSelect
-      style={{width: '35%', marginLeft:'10px'}}value={value} dropdownStyle={{maxHeight: 400,overflow: 'auto',}}
-      treeData={treeData}
-      placeholder="Ville de Depart"
-      treeDefaultExpandAll
-      onChange={onChange}
-    /> 
-       <p><RangePicker showTime /></p>
-</Card>
-   
-  </Space>
+          <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+            <Card
+              style={{
+                border: '1px solid',
+                borderColor: '#000000',
+                backgroundColor: '#1890ff',
+              }}
+              title="J'achète mon billet"
+              size="small"
+             
+            >
+              <TreeSelect
+                style={{ width: '35%', marginRight: '10px' }}
+                value={value}
+                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                treeData={treeData}
+                placeholder="Ville de Depart"
+                treeDefaultExpandAll
+                onChange={onChange}
+              />
+              <TreeSelect
+                style={{ width: '35%', marginLeft: '10px' }}
+                value={value}
+                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                treeData={treeData}
+                placeholder="Ville de D'arrivée"
+                treeDefaultExpandAll
+                onChange={onChange}
+              />
+                  {
+                <Button type="primary" onClick={handleSearch}  style={{ width: '20%', marginLeft: '16px' }}>
+                  Rechercher
+                </Button>
+              }
+              <p>
+                <RangePicker showTime />
+              </p>
+          
+            </Card>
+            
+          </Space>
         </div>
       </Content>
-      <Footer className="footer">
-       Projet ©{new Date().getFullYear()} 
-      </Footer>
+      <Footer className="footer">Projet ©{new Date().getFullYear()}</Footer>
     </Layout>
   );
 };
