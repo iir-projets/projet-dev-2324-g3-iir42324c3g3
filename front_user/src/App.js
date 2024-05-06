@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Breadcrumb, Layout, Menu, theme, Card, Space, TreeSelect, DatePicker, Button } from 'antd';
+import { Breadcrumb, Layout, Menu, theme, Card, Space, TreeSelect, DatePicker, Button, Typography, Row, Col } from 'antd';
 import './App.css';
 
 const { RangePicker } = DatePicker;
 const { Header, Content, Footer } = Layout;
+const { Title } = Typography;
 
 const treeData = [
   {
@@ -85,8 +86,7 @@ const App = () => {
                 backgroundColor: '#1890ff',
               }}
               title="J'achète mon billet"
-              size="small"
-             
+              size="large"
             >
               <TreeSelect
                 style={{ width: '35%', marginRight: '10px' }}
@@ -106,17 +106,50 @@ const App = () => {
                 treeDefaultExpandAll
                 onChange={onChange}
               />
-                  {
-                <Button type="primary" onClick={handleSearch}  style={{ width: '20%', marginLeft: '16px' }}>
-                  Rechercher
-                </Button>
-              }
+              <Button type="primary" onClick={handleSearch} style={{ width: '20%', marginLeft: '16px' }}>
+                Rechercher
+              </Button>
               <p>
                 <RangePicker showTime />
               </p>
-          
             </Card>
-            
+            <Card  
+             style={{
+                border: '2px solid',
+                borderColor: '#000000',
+                backgroundColor:'white',
+               
+              }}
+              title="Vol"
+              size="large"
+              >
+         
+           
+              <Row>
+                <Col span={6}>
+                <Title level={4}>Date de départ :</Title> 
+                </Col>
+
+                <Col span={6}>
+                <Title level={4}>Date d'arrivée :</Title>
+                </Col>
+                 
+                <Col span={6}>
+                <Title level={4}>Aéroport de Départ :</Title>
+                </Col>
+                  
+                <Col span={6}>
+                <Title level={4}>Aéroport de retour :</Title>
+                   </Col>
+              </Row>
+              <Row>
+                <Col span={6}>
+                <Title level={4}>Prix</Title>
+                  
+                </Col>
+              </Row>
+             
+            </Card>
           </Space>
         </div>
       </Content>
