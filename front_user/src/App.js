@@ -1,25 +1,176 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import { Breadcrumb, Layout, Menu, theme, Card, Space, TreeSelect, DatePicker, Button, Typography, Row, Col, Input, Checkbox, Image } from 'antd';
 import './App.css';
+import img1 from './img1.png';
 
-function App() {
+const { RangePicker } = DatePicker;
+const { Header, Content, Footer } = Layout;
+const { Title, Text } = Typography;
+
+const treeData = [
+  {
+    title: 'Maroc',
+    value: '0-0',
+    children: [
+      {
+        title: 'Marrakech',
+        value: '0-0-1',
+      },
+      {
+        title: 'Casa',
+        value: '0-0-2',
+      },
+    ],
+  },
+  {
+    title: 'France',
+    value: '0-0',
+    children: [
+      {
+        title: 'Paris',
+        value: '0-0-1',
+      },
+      {
+        title: 'Marseille',
+        value: '0-0-2',
+      },
+    ],
+  },
+];
+
+const items = [
+  { key: 1, label: 'Mes Réservations' },
+  { key: 2, label: "S'inscrire" },
+  { key: 3, label: 'Se Connecter' },
+];
+
+const App = () => {
+  const [value, setValue] = useState();
+  const onChange = (newValue) => {
+    console.log(newValue);
+    setValue(newValue);
+  };
+  const initialValue = 'Valeur par défaut';
+
+  const {
+    token: { borderRadiusLG },
+  } = theme.useToken();
+
+  const handleSearch = () => {
+    // Ajoutez ici la logique de recherche
+    console.log('Recherche effectuée');
+  };
+
+  const sharedProps = {
+    style: {
+      width: '100%',
+    },
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <Layout style={{ minHeight: '100vh', backgroundImage: `url(${img1})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
+      <Header className="header">
+        <div className="logo">Moroccan Airline</div>
+        <Menu
+          theme="dark"
+          mode="horizontal"
+          defaultSelectedKeys={['2']}
+          items={items}
+          className="menu"
+        />
+      </Header>
+      <Content className="content">
+        <div
+          className="content-container"
+          style={{
+            background: 'transparent',
+            borderRadius: borderRadiusLG,
+          }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+            <Card
+              style={{
+                border: '1px solid',
+                borderColor: '#000000',
+                background: 'transparent',
+              }}
+             
+              title={<Title level={2}>Planifier votre Voyage</Title>}
+              size="large"
+            >
+              <TreeSelect
+                style={{ width: '35%', marginRight: '10px' }}
+                value={value}
+                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                treeData={treeData}
+                placeholder="Ville de Depart"
+                treeDefaultExpandAll
+                onChange={onChange}
+              />
+              <TreeSelect
+                style={{ width: '35%', marginLeft: '10px' }}
+                value={value}
+                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                treeData={treeData}
+                placeholder="Ville de D'arrivée"
+                treeDefaultExpandAll
+                onChange={onChange}
+              />
+              <Button type="primary" onClick={handleSearch} style={{ width: '20%', marginLeft: '16px' }}>
+                Rechercher
+              </Button>
+              <div style={{ marginTop: '16px' }}>
+              <Checkbox >aller retour</Checkbox>
+              </div>
+              <p>
+                <RangePicker showTime />
+              </p>
+            </Card>
+            <Card
+              style={{
+                border: '2px solid',
+                borderColor: '#000000',
+                background: 'transparent',
+              }}
+              title={<Title level={2}>Vol</Title>}
+              size="large"
+            >
+              <Row>
+                <Col span={6}>
+                  <Title level={2}>Date de départ :</Title>
+                  <Title level={4}>1/2/2024</Title>
+                </Col>
+                <Col span={6}>
+                  <Title level={2}>Date d'arrivée :</Title>
+                  <Title level={4}>8/4/2024</Title>
+                </Col>
+                <Col span={6}>
+                  <Title level={2}>Aéroport de Départ :</Title>
+                  <Title level={4}>Marrakech</Title>
+                </Col>
+                <Col span={6}>
+                  <Button type="primary" style={{ marginLeft: '16px' }}>
+                    Réserver
+                  </Button>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={6}>
+                  <Title level={2}>Aéroport de retour :</Title>
+                  <Title level={4}>Agadir</Title>
+                </Col>
+                <Col span={6}>
+                  <Title level={2}>Prix :</Title>
+                  <Title level={4}>399DH</Title>
+                </Col>
+              </Row>
+            </Card>
+          </Space>
+        </div>
+      </Content>
+      <Footer className="footer">Projet ©{new Date().getFullYear()}</Footer>
+    </Layout>
   );
-}
+};
 
 export default App;
