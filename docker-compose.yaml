@@ -1,0 +1,13 @@
+version: '3'
+services:
+
+  spring-boot:
+    build: ./gestion_companies_aeriennes_backend
+    ports:
+      - "8080:8080"
+    
+
+  react:
+    build: ./front_admin
+    ports:
+      - "3000:3000"

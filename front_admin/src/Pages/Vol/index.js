@@ -159,7 +159,7 @@ const Vol = () => {
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <Button onClick={() => voirMonuments(record.num)}>Voir</Button>
+          
           <Button type="primary" onClick={() => modifierMonument(record.num)}>
             Modifier
           </Button>
