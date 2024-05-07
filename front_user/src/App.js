@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Breadcrumb, Layout, Menu, theme, Card, Space, TreeSelect, DatePicker, Button, Typography, Row, Col, Input } from 'antd';
+import { Breadcrumb, Layout, Menu, theme, Card, Space, TreeSelect, DatePicker, Button, Typography, Row, Col, Input, Checkbox } from 'antd';
 import './App.css';
 
 const { RangePicker } = DatePicker;
@@ -118,12 +118,7 @@ const App = () => {
                 Rechercher
               </Button>
               <div style={{ marginTop: '16px' }}>
-                <Button type="primary" style={{ marginRight: '8px' }}>
-                  Aller
-                </Button>
-                <Button type="primary">
-                  Retour
-                </Button>
+              <Checkbox >aller retour</Checkbox>
               </div>
               <p>
                 <RangePicker showTime />
