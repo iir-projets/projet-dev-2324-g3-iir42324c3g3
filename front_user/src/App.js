@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Breadcrumb, Layout, Menu, theme, Card, Space, TreeSelect, DatePicker, Button, Typography, Row, Col } from 'antd';
+import { Breadcrumb, Layout, Menu, theme, Card, Space, TreeSelect, DatePicker, Button, Typography, Row, Col, Input } from 'antd';
 import './App.css';
 
 const { RangePicker } = DatePicker;
 const { Header, Content, Footer } = Layout;
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const treeData = [
   {
@@ -49,6 +49,8 @@ const App = () => {
     console.log(newValue);
     setValue(newValue);
   };
+  const initialValue = 'Valeur par défaut';
+
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -56,6 +58,12 @@ const App = () => {
   const handleSearch = () => {
     // Ajoutez ici la logique de recherche
     console.log('Recherche effectuée');
+  };
+
+  const sharedProps = {
+    style: {
+      width: '100%',
+    },
   };
 
   return (
@@ -109,46 +117,56 @@ const App = () => {
               <Button type="primary" onClick={handleSearch} style={{ width: '20%', marginLeft: '16px' }}>
                 Rechercher
               </Button>
+              <div style={{ marginTop: '16px' }}>
+                <Button type="primary" style={{ marginRight: '8px' }}>
+                  Aller
+                </Button>
+                <Button type="primary">
+                  Retour
+                </Button>
+              </div>
               <p>
                 <RangePicker showTime />
               </p>
             </Card>
             <Card  
-             style={{
+              style={{
                 border: '2px solid',
                 borderColor: '#000000',
                 backgroundColor:'white',
-               
               }}
-              title="Vol"
+              title={<Title level={2}>Vol</Title>}
               size="large"
-              >
-         
-           
+            >
               <Row>
                 <Col span={6}>
-                <Title level={4}>Date de départ :</Title> 
+                  <Title level={2}>Date de départ :</Title>
+                  <Title level={4}>1/2/2024</Title>
                 </Col>
-
                 <Col span={6}>
-                <Title level={4}>Date d'arrivée :</Title>
+                  <Title level={2}>Date d'arrivée :</Title>
+                  <Title level={4}>8/4/2024</Title>
                 </Col>
-                 
                 <Col span={6}>
-                <Title level={4}>Aéroport de Départ :</Title>
+                  <Title level={2}>Aéroport de Départ :</Title>
+                  <Title level={4}>Marrakech</Title>
                 </Col>
-                  
                 <Col span={6}>
-                <Title level={4}>Aéroport de retour :</Title>
-                   </Col>
+                  <Button type="primary" style={{ marginLeft: '16px' }}>
+                    Réserver
+                  </Button>
+                </Col>
               </Row>
               <Row>
                 <Col span={6}>
-                <Title level={4}>Prix</Title>
-                  
+                  <Title level={2}>Aéroport de retour :</Title>
+                  <Title level={4}>Agadir</Title>
+                </Col>
+                <Col span={6}>
+                  <Title level={2}>Prix :</Title>
+                  <Title level={4}>399DH</Title>
                 </Col>
               </Row>
-             
             </Card>
           </Space>
         </div>
