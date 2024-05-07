@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Breadcrumb, Layout, Menu, theme, Card, Space, TreeSelect, DatePicker, Button, Typography, Row, Col, Input, Checkbox } from 'antd';
+import { Breadcrumb, Layout, Menu, theme, Card, Space, TreeSelect, DatePicker, Button, Typography, Row, Col, Input, Checkbox, Image } from 'antd';
 import './App.css';
+import img1 from './img1.png';
 
 const { RangePicker } = DatePicker;
 const { Header, Content, Footer } = Layout;
@@ -52,7 +53,7 @@ const App = () => {
   const initialValue = 'Valeur par défaut';
 
   const {
-    token: { colorBgContainer, borderRadiusLG },
+    token: { borderRadiusLG },
   } = theme.useToken();
 
   const handleSearch = () => {
@@ -67,7 +68,7 @@ const App = () => {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ minHeight: '100vh', backgroundImage: `url(${img1})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
       <Header className="header">
         <div className="logo">Moroccan Airline</div>
         <Menu
@@ -82,7 +83,7 @@ const App = () => {
         <div
           className="content-container"
           style={{
-            background: colorBgContainer,
+            background: 'transparent',
             borderRadius: borderRadiusLG,
           }}
         >
@@ -91,9 +92,10 @@ const App = () => {
               style={{
                 border: '1px solid',
                 borderColor: '#000000',
-                backgroundColor: '#1890ff',
+                background: 'transparent',
               }}
-              title="J'achète mon billet"
+             
+              title={<Title level={2}>Planifier votre Voyage</Title>}
               size="large"
             >
               <TreeSelect
@@ -124,11 +126,11 @@ const App = () => {
                 <RangePicker showTime />
               </p>
             </Card>
-            <Card  
+            <Card
               style={{
                 border: '2px solid',
                 borderColor: '#000000',
-                backgroundColor:'white',
+                background: 'transparent',
               }}
               title={<Title level={2}>Vol</Title>}
               size="large"

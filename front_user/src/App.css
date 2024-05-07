@@ -19,6 +19,7 @@
 
 .content {
   padding: 0 48px;
+  
 }
 
 .breadcrumb {
@@ -28,6 +29,7 @@
 .content-container {
   min-height: 280px;
   padding: 24px;
+ 
 }
 
 .footer {
