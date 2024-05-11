@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -15,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +23,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.gestion_companies_aeriennes_backend.DAO.PassagerRepository;
 import com.example.gestion_companies_aeriennes_backend.DAO.ReservationRepository;
@@ -72,7 +69,7 @@ public class ReservationServiceUnitTest {
 	}
 	@Test
 	@DisplayName("TestUnit :récupération d'une réservation par id ")
-	 public void getAllReservationById() {
+	 public void getReservationById() {
 		 Reservation reservation = new Reservation();
 		 reservation.setNbr_place_res(4);
 		 when(reservationRepository.findById(reservation.getId())).thenReturn(Optional.of(reservation));
@@ -97,7 +94,7 @@ public class ReservationServiceUnitTest {
 		    reservationDTO.setId_passager("a112");
 		    reservationDTO.setNbr_place_res(3);
 		    reservationDTO.setPrix_reservation(600);
-
+ 
 		    Vol vol = new Vol();
 		    vol.setNum(reservationDTO.getId_vol());
 
@@ -109,10 +106,10 @@ public class ReservationServiceUnitTest {
 		    when(reservationRepository.findById(reservationId)).thenReturn(Optional.of(existingReservation));
 		    when(reservationRepository.save(any(Reservation.class))).thenReturn(existingReservation);
 
-		    // Act
+		   
 		    ReservationDTO updatedReservation = reservationService.updateReservation(reservationId, reservationDTO);
 
-		    // Assert
+		   
 		    assertNotNull(updatedReservation);
 		    assertEquals(3, updatedReservation.getNbr_place_res());
 		    assertEquals(600, updatedReservation.getPrix_reservation());
