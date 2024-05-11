@@ -45,13 +45,16 @@ const AppComponents = () => {
   };
 
   return (
-    <Layout>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
+    <Layout style={{ minHeight: '100vh' }}>
+      <Sider trigger={null} collapsible collapsed={collapsed}
+      style={{backgroundColor:"#023047"}}
+      >
         {/* Placeholder for logo */}
         <div className="logo" > 
-          <span style={{ fontSize: '20px', color: 'white' }}>Admin Panel</span>
+          <span style={{ fontSize: '20px', color: 'white' ,}}>Admin Panel</span>
         </div>
         <Menu
+         style={{backgroundColor:"#023047"}}
           theme="dark"
           mode="inline"
           defaultSelectedKeys={['1']}
@@ -85,11 +88,7 @@ const AppComponents = () => {
                 icon: <SolutionOutlined />,
                 label: 'Gestion Aeroport',
               },
-              {
-                key: '/cooraeroport',
-                icon: <SolutionOutlined />,
-                label: 'Gestion Coordonnées',
-              },
+            
               {
                 key: '/passager',
                 icon: <SolutionOutlined />,
@@ -148,7 +147,6 @@ const AppComponents = () => {
             textAlign: 'center',
             margin: 10,
             padding: 10,
-            marginBottom:150,
           }}
         >
           <Typography.Title level={5}>Projet Pfa EMSI ©2024 Created by </Typography.Title>
