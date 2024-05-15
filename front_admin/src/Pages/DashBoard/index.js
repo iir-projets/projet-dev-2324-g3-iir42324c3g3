@@ -14,11 +14,13 @@ useEffect(() => {
   const fetchData = async () => {
     try {
       const [aeroportResponse, avionResponse, passagerResponse,reservationResponse,volResponse] = await Promise.all([
+
         axios.get('http://localhost:8080/api/aeroport'),
         axios.get('http://localhost:8080/api/avion'),
         axios.get('http://localhost:8080/api/Passager'),
         axios.get('http://localhost:8080/api/reservation'),
         axios.get('http://localhost:8080/api/vols'),
+
       ]);
 
       setAeroportCount(aeroportResponse.data.length);

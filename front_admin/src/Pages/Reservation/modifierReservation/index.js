@@ -1,8 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Select, message } from 'antd';
 import './index.css';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+
 
 const layout = {
   labelCol: {
@@ -25,12 +27,14 @@ const filterOption = (input, option) =>
 
 const ModifierReservation = () => {
   const navigate = useNavigate();
+
   const [form] = Form.useForm();
   const { id } = useParams();
   const [passengers, setPassengers] = useState([]);
   const [flights, setFlights] = useState([]);
   const [initialValues, setInitialValues] = useState({});
   const [selectedStatus, setSelectedStatus] = useState(null);
+
 
   useEffect(() => {
     const fetchPassengers = async () => {
@@ -50,6 +54,7 @@ const ModifierReservation = () => {
         console.error('Error fetching flights:', error);
       }
     };
+
 
     const fetchReservationData = async () => {
       try {
@@ -93,13 +98,16 @@ const ModifierReservation = () => {
         <Form
           form={form}
           initialValues={initialValues}
+
           {...layout}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           className="my-form"
         >
+
           <Form.Item
             style={{ width: '500px' }}
+
             label="Nombre de place"
             name="nbr_place_res"
             rules={[
@@ -123,6 +131,7 @@ const ModifierReservation = () => {
           >
             <Input />
           </Form.Item>
+
           <Form.Item label="Statut de réservation" name="statut">
             <Select
               showSearch
@@ -166,6 +175,7 @@ const ModifierReservation = () => {
               }))}
             />
           </Form.Item>
+
           <Form.Item {...tailLayout}>
             <Button type="primary" htmlType="submit" className="submit-button">
               Modifier
