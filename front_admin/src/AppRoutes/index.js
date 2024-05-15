@@ -34,7 +34,11 @@ function AppRoutes(){
           
           <Route path="/aeroport" element={<Aeroport />} />
           <Route path="/aeroport/ajouterAeroport" element={<AjouterAeroport />} />
+
+          <Route path="/aeroport/modifierAeroport/:id" element={<ModifierAeroport />} />
+
           <Route path="/aeroport/modifierAeroport" element={<ModifierAeroport />} />
+
 
 
 

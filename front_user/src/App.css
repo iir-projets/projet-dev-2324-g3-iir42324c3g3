@@ -1,0 +1,40 @@
+.header {
+  display: flex;
+  align-items: center;
+  background-color: #001529;
+  
+}
+
+.logo {
+  color: #1890ff;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 16px;
+}
+
+.menu {
+  flex: 1;
+  justify-content: right;
+}
+
+.content {
+  padding: 0 48px;
+  
+}
+
+.breadcrumb {
+  margin: 16px 0;
+}
+
+.content-container {
+  min-height: 280px;
+  padding: 24px;
+ 
+}
+
+.footer {
+  text-align: center;
+  background-color: #050408;
+  color: #dbdbdd;
+  padding: 16px;
+}
